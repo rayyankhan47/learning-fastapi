@@ -85,7 +85,7 @@ function App() {
   // Derived list with filter and sorting
   const filteredProducts = useMemo(() => {
     let filtered = products;
-    
+
     // Apply filter
     const q = filter.trim().toLowerCase();
     if (q) {
@@ -95,12 +95,12 @@ function App() {
         p.description?.toLowerCase().includes(q)
       );
     }
-    
+
     // Apply sorting
     return filtered.sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
-      
+
       // Handle numeric fields
       if (sortField === "id" || sortField === "price" || sortField === "quantity") {
         aVal = Number(aVal);
@@ -110,7 +110,7 @@ function App() {
         aVal = String(aVal).toLowerCase();
         bVal = String(bVal).toLowerCase();
       }
-      
+
       if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
       if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
@@ -199,7 +199,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-badge">📦</span>
-          <h1>Telusko Trac</h1>
+          <h1>Package Tracking Application</h1>
         </div>
         <div className="top-actions">
           <button className="btn btn-light" onClick={fetchProducts} disabled={loading}>
@@ -289,7 +289,7 @@ function App() {
             {message && <div className="success-msg">{message}</div>}
             {error && <div className="error-msg">{error}</div>}
           </div>
-          
+
           <TaglineSection />
 
           <div className="card list-card">
@@ -301,26 +301,26 @@ function App() {
                 <table className="product-table">
                   <thead>
                     <tr>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'id' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('id')}
                       >
                         ID
                       </th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'name' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('name')}
                       >
                         Name
                       </th>
                       <th>Description</th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'price' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('price')}
                       >
                         Price
                       </th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'quantity' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('quantity')}
                       >

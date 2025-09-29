@@ -1,10 +1,17 @@
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from models import Product
 from database import SessionLocal, engine
 import database_models
 from sqlalchemy.orm import Session
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"]
+)
 
 database_models.Base.metadata.create_all(bind=engine)
 
@@ -74,7 +81,7 @@ def add_product(product: Product, db: Session = Depends(get_db)):
     return product # returns what you added, pythonic!
 
 
-@app.put("/product")
+@app.put("/products/{id}")
 def update_product(id: int, product: Product, db: Session = Depends(get_db)):
     '''OLD:
     for i in range(len(products)):
@@ -97,8 +104,8 @@ def update_product(id: int, product: Product, db: Session = Depends(get_db)):
         return "No product found!"
 
 
-@app.delete("/product")
-def delete_product(id: int, product: Product, db: Session = Depends(get_db)):
+@app.delete("/products/{id}")
+def delete_product(id: int, db: Session = Depends(get_db)):
     '''OLD:
     for i in range(len(products)):
         if products[i].id == id:

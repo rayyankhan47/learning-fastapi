@@ -70,23 +70,49 @@ def add_product(product: Product, db: Session = Depends(get_db)):
     return product # returns what you added, pythonic!
     '''
     db.add(database_models.Product(**product.model_dump()))
+    db.commit()
     return product # returns what you added, pythonic!
 
 
 @app.put("/product")
-def update_product(id: int, product: Product):
+def update_product(id: int, product: Product, db: Session = Depends(get_db)):
+    '''OLD:
     for i in range(len(products)):
         if products[i].id == id:
             products[i] = product
             return "Product added successfully!"
         
     return "No such product found!"
+    '''
+
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    if db_product:
+        db_product.name = product.name
+        db_product.description = product.description
+        db_product.price = product.price
+        db_product.quantity = product.quantity
+        db.commit()
+        return "Product updated!"
+    else:
+        return "No product found!"
+
 
 @app.delete("/product")
-def delete_product(id: int):
+def delete_product(id: int, product: Product, db: Session = Depends(get_db)):
+    '''OLD:
     for i in range(len(products)):
         if products[i].id == id:
             del products[i]
             return "Product successfully removed!"
 
     return "The product that you want to delete was not found!"
+    '''
+
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+
+    if db_product:
+        db.delete(db_product)
+        db.commit()
+        return "Product successfully deleted!"
+    else:
+        return "Product not found!"
